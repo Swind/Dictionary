@@ -1,0 +1,28 @@
+package tw.dictionary.api.parser.model;
+
+option java_package = "tw.dictionary.api.parser.model";
+option java_outer_classname = "Words";
+
+//define Word
+message Word {
+	required string word = 1;
+	repeated Interpret interprets = 2;
+
+}
+
+//define Interpret
+message Interpret {
+	required string speech = 1;
+	repeated Explain explains = 2;
+}
+
+//define Explain
+message Explain {
+	required string content = 1;
+	repeated Example examples = 2;
+}
+
+//define Example
+message Example {
+	required string content = 1;
+}
