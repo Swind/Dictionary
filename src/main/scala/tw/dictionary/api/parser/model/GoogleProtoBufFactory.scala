@@ -2,6 +2,8 @@ package tw.dictionary.api.parser.model
 
 object GoogleProtoBufFactory {
   
+	def emptyWord(word:String) = Words.Word.newBuilder.setWord(word).build
+
 	def Word(word:String, interprets:List[Words.Interpret]) = {
 		val builder = Words.Word.newBuilder
 		builder.setWord(word)

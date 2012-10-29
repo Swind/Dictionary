@@ -28,10 +28,18 @@ class YahooParser {
   import tw.dictionary.api.parser.model.GoogleProtoBufFactory._
   
   def LookUp(word: String) = {
-    val doc = Jsoup.connect(DictionaryURL + word).get
-    Word(word, parseInterpret(doc))
+    println(word)
+    try
+    {
+    	val doc = Jsoup.connect(DictionaryURL + word).get
+    	Word(word, parseInterpret(doc))
+    }
+    catch
+    {
+      case _ => emptyWord(word)
+    }
   }
- 
+  
   def SelectAndMapToList[T](elem: Element, selectName: String)(mapAction: (Element) => T): List[T] = elem.select(selectName).map(mapAction).toList
 
   //Interpret
