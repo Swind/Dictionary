@@ -31,20 +31,22 @@ class YahooParser {
     val doc = Jsoup.connect(DictionaryURL + word).get
     Word(word, parseInterpret(doc))
   }
-  
+ 
   def SelectAndMapToList[T](elem: Element, selectName: String)(mapAction: (Element) => T): List[T] = elem.select(selectName).map(mapAction).toList
-  
+
+  //Interpret
   def parseInterpret(doc: Document) = SelectAndMapToList(doc, InterpretElementTag) {
     elem => Interpret(getSpeech(elem), parseExplain(elem))
   }
   def getSpeech(interpretElement: Element) = interpretElement.select(SpeechTagName).first.text
   
-  
+  //Explain
   def parseExplain(interpretElement: Element): List[Words.Explain] = SelectAndMapToList(interpretElement, ExplainElementName) {
     elem => Explain(getFirstMatchText(elem, ExplainTitleName), parseExample(elem))
   }
   def getFirstMatchText(element: Element, pattern: String) = element.select(pattern).first.text
 
+  //Example
   def parseExample(explainElement: Element):List[Words.Example] = SelectAndMapToList(explainElement, ExampleTagName) {
     elem => Example(elem.text)
   }
