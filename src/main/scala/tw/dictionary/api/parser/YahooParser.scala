@@ -11,6 +11,9 @@ import tw.dictionary.api.parser.model._
 object YahooParser {
   val DictionaryURL = """http://tw.dictionary.yahoo.com/dictionary?p="""
 
+  val PronunciationName= "div.pronunciation"
+  val AudioName = "cite#audio1"
+    
   val InterpretElementTag = "div[class=def clr nobr]"
   val SpeechTagName = "div[class=caption]"
   val ExplainElementName = "div.list ol li"
