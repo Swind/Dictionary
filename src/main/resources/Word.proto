@@ -7,7 +7,8 @@ option java_outer_classname = "Words";
 message Word {
 	required string word = 1;
 	repeated Interpret interprets = 2;
-
+	optional string pronunciation = 3;
+	optional string audioURL = 4;
 }
 
 //define Interpret
