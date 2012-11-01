@@ -27,7 +27,7 @@ object YahooParser {
   }
 }
 
-class YahooParser {
+class YahooParser extends DictionaryParser{
   import tw.dictionary.api.parser.YahooParser._
   import tw.dictionary.api.parser.model.GoogleProtoBufFactory._
   
