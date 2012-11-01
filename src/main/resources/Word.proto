@@ -6,9 +6,14 @@ option java_outer_classname = "Words";
 //define Word
 message Word {
 	required string word = 1;
-	repeated Interpret interprets = 2;
-	optional string pronunciation = 3;
-	optional string audioURL = 4;
+	optional Pronunciation pronunciation = 2;
+	repeated Interpret interprets = 3;
+}
+
+//define Pronunciation
+message Pronunciation{
+	required string pronunciation = 1;
+	optional string audioURL = 2;
 }
 
 //define Interpret

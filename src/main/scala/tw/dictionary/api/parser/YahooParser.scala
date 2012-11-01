@@ -13,6 +13,7 @@ object YahooParser {
 
   val PronunciationName= "div.pronunciation"
   val AudioName = "cite#audio1"
+  val AudioURLAttrName = "value"
     
   val InterpretElementTag = "div[class=def clr nobr]"
   val SpeechTagName = "div[class=caption]"
@@ -35,7 +36,8 @@ class YahooParser {
     try
     {
     	val doc = Jsoup.connect(DictionaryURL + word).get
-    	Word(word, parseInterpret(doc))
+    	println(doc.toString)
+    	Word(word, parsePronunciation(doc), parseInterpret(doc))
     }
     catch
     {
@@ -45,6 +47,14 @@ class YahooParser {
   
   def SelectAndMapToList[T](elem: Element, selectName: String)(mapAction: (Element) => T): List[T] = elem.select(selectName).map(mapAction).toList
 
+  //pronunciation
+  def parsePronunciation(doc: Document) = Pronunciation(doc.select(PronunciationName).first.text, parseAudioURL(doc))
+  
+  //audio URL
+  def parseAudioURL(doc: Document) = doc.select(AudioName).first.toString
+  
+ 
+  
   //Interpret
   def parseInterpret(doc: Document) = SelectAndMapToList(doc, InterpretElementTag) {
     elem => Interpret(getSpeech(elem), parseExplain(elem))

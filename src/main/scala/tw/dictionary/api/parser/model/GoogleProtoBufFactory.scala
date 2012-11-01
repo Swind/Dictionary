@@ -4,12 +4,19 @@ object GoogleProtoBufFactory {
   
 	def emptyWord(word:String) = Words.Word.newBuilder.setWord(word).build
 
-	def Word(word:String, interprets:List[Words.Interpret]) = {
+	def Word(word:String, pronunciation:Words.Pronunciation ,interprets:List[Words.Interpret]) = {
 		val builder = Words.Word.newBuilder
-		builder.setWord(word)
+		
+		builder
+		.setWord(word)
+		.setPronunciation(pronunciation)
+		
 		interprets.foreach(builder.addInterprets)
 		builder.build
 	}
+	
+	def Pronunciation(pronunciation:String, audioURL:String) = 
+	  Words.Pronunciation.newBuilder.setPronunciation(pronunciation).setAudioURL(audioURL).build
 	
 	def Interpret(speech:String, explains:List[Words.Explain]) = {
 		val builder = Words.Interpret.newBuilder

@@ -15,7 +15,12 @@ public final class Words {
     boolean hasWord();
     String getWord();
     
-    // repeated .tw.dictionary.api.parser.model.Interpret interprets = 2;
+    // optional .tw.dictionary.api.parser.model.Pronunciation pronunciation = 2;
+    boolean hasPronunciation();
+    tw.dictionary.api.parser.model.Words.Pronunciation getPronunciation();
+    tw.dictionary.api.parser.model.Words.PronunciationOrBuilder getPronunciationOrBuilder();
+    
+    // repeated .tw.dictionary.api.parser.model.Interpret interprets = 3;
     java.util.List<tw.dictionary.api.parser.model.Words.Interpret> 
         getInterpretsList();
     tw.dictionary.api.parser.model.Words.Interpret getInterprets(int index);
@@ -24,14 +29,6 @@ public final class Words {
         getInterpretsOrBuilderList();
     tw.dictionary.api.parser.model.Words.InterpretOrBuilder getInterpretsOrBuilder(
         int index);
-    
-    // optional string pronunciation = 3;
-    boolean hasPronunciation();
-    String getPronunciation();
-    
-    // optional string audioURL = 4;
-    boolean hasAudioURL();
-    String getAudioURL();
   }
   public static final class Word extends
       com.google.protobuf.GeneratedMessage
@@ -94,8 +91,21 @@ public final class Words {
       }
     }
     
-    // repeated .tw.dictionary.api.parser.model.Interpret interprets = 2;
-    public static final int INTERPRETS_FIELD_NUMBER = 2;
+    // optional .tw.dictionary.api.parser.model.Pronunciation pronunciation = 2;
+    public static final int PRONUNCIATION_FIELD_NUMBER = 2;
+    private tw.dictionary.api.parser.model.Words.Pronunciation pronunciation_;
+    public boolean hasPronunciation() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public tw.dictionary.api.parser.model.Words.Pronunciation getPronunciation() {
+      return pronunciation_;
+    }
+    public tw.dictionary.api.parser.model.Words.PronunciationOrBuilder getPronunciationOrBuilder() {
+      return pronunciation_;
+    }
+    
+    // repeated .tw.dictionary.api.parser.model.Interpret interprets = 3;
+    public static final int INTERPRETS_FIELD_NUMBER = 3;
     private java.util.List<tw.dictionary.api.parser.model.Words.Interpret> interprets_;
     public java.util.List<tw.dictionary.api.parser.model.Words.Interpret> getInterpretsList() {
       return interprets_;
@@ -115,75 +125,10 @@ public final class Words {
       return interprets_.get(index);
     }
     
-    // optional string pronunciation = 3;
-    public static final int PRONUNCIATION_FIELD_NUMBER = 3;
-    private java.lang.Object pronunciation_;
-    public boolean hasPronunciation() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    public String getPronunciation() {
-      java.lang.Object ref = pronunciation_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          pronunciation_ = s;
-        }
-        return s;
-      }
-    }
-    private com.google.protobuf.ByteString getPronunciationBytes() {
-      java.lang.Object ref = pronunciation_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        pronunciation_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    
-    // optional string audioURL = 4;
-    public static final int AUDIOURL_FIELD_NUMBER = 4;
-    private java.lang.Object audioURL_;
-    public boolean hasAudioURL() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    public String getAudioURL() {
-      java.lang.Object ref = audioURL_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          audioURL_ = s;
-        }
-        return s;
-      }
-    }
-    private com.google.protobuf.ByteString getAudioURLBytes() {
-      java.lang.Object ref = audioURL_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        audioURL_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    
     private void initFields() {
       word_ = "";
+      pronunciation_ = tw.dictionary.api.parser.model.Words.Pronunciation.getDefaultInstance();
       interprets_ = java.util.Collections.emptyList();
-      pronunciation_ = "";
-      audioURL_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -193,6 +138,12 @@ public final class Words {
       if (!hasWord()) {
         memoizedIsInitialized = 0;
         return false;
+      }
+      if (hasPronunciation()) {
+        if (!getPronunciation().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
       for (int i = 0; i < getInterpretsCount(); i++) {
         if (!getInterprets(i).isInitialized()) {
@@ -210,14 +161,11 @@ public final class Words {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeBytes(1, getWordBytes());
       }
-      for (int i = 0; i < interprets_.size(); i++) {
-        output.writeMessage(2, interprets_.get(i));
-      }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(3, getPronunciationBytes());
+        output.writeMessage(2, pronunciation_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(4, getAudioURLBytes());
+      for (int i = 0; i < interprets_.size(); i++) {
+        output.writeMessage(3, interprets_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -232,17 +180,13 @@ public final class Words {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(1, getWordBytes());
       }
-      for (int i = 0; i < interprets_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, interprets_.get(i));
-      }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, getPronunciationBytes());
+          .computeMessageSize(2, pronunciation_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      for (int i = 0; i < interprets_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, getAudioURLBytes());
+          .computeMessageSize(3, interprets_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -360,6 +304,7 @@ public final class Words {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getPronunciationFieldBuilder();
           getInterpretsFieldBuilder();
         }
       }
@@ -371,16 +316,18 @@ public final class Words {
         super.clear();
         word_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
+        if (pronunciationBuilder_ == null) {
+          pronunciation_ = tw.dictionary.api.parser.model.Words.Pronunciation.getDefaultInstance();
+        } else {
+          pronunciationBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
         if (interpretsBuilder_ == null) {
           interprets_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
+          bitField0_ = (bitField0_ & ~0x00000004);
         } else {
           interpretsBuilder_.clear();
         }
-        pronunciation_ = "";
-        bitField0_ = (bitField0_ & ~0x00000004);
-        audioURL_ = "";
-        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
       
@@ -423,23 +370,23 @@ public final class Words {
           to_bitField0_ |= 0x00000001;
         }
         result.word_ = word_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        if (pronunciationBuilder_ == null) {
+          result.pronunciation_ = pronunciation_;
+        } else {
+          result.pronunciation_ = pronunciationBuilder_.build();
+        }
         if (interpretsBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
             interprets_ = java.util.Collections.unmodifiableList(interprets_);
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ = (bitField0_ & ~0x00000004);
           }
           result.interprets_ = interprets_;
         } else {
           result.interprets_ = interpretsBuilder_.build();
         }
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.pronunciation_ = pronunciation_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.audioURL_ = audioURL_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -459,11 +406,14 @@ public final class Words {
         if (other.hasWord()) {
           setWord(other.getWord());
         }
+        if (other.hasPronunciation()) {
+          mergePronunciation(other.getPronunciation());
+        }
         if (interpretsBuilder_ == null) {
           if (!other.interprets_.isEmpty()) {
             if (interprets_.isEmpty()) {
               interprets_ = other.interprets_;
-              bitField0_ = (bitField0_ & ~0x00000002);
+              bitField0_ = (bitField0_ & ~0x00000004);
             } else {
               ensureInterpretsIsMutable();
               interprets_.addAll(other.interprets_);
@@ -476,7 +426,7 @@ public final class Words {
               interpretsBuilder_.dispose();
               interpretsBuilder_ = null;
               interprets_ = other.interprets_;
-              bitField0_ = (bitField0_ & ~0x00000002);
+              bitField0_ = (bitField0_ & ~0x00000004);
               interpretsBuilder_ = 
                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getInterpretsFieldBuilder() : null;
@@ -484,12 +434,6 @@ public final class Words {
               interpretsBuilder_.addAllMessages(other.interprets_);
             }
           }
-        }
-        if (other.hasPronunciation()) {
-          setPronunciation(other.getPronunciation());
-        }
-        if (other.hasAudioURL()) {
-          setAudioURL(other.getAudioURL());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -499,6 +443,12 @@ public final class Words {
         if (!hasWord()) {
           
           return false;
+        }
+        if (hasPronunciation()) {
+          if (!getPronunciation().isInitialized()) {
+            
+            return false;
+          }
         }
         for (int i = 0; i < getInterpretsCount(); i++) {
           if (!getInterprets(i).isInitialized()) {
@@ -538,19 +488,18 @@ public final class Words {
               break;
             }
             case 18: {
-              tw.dictionary.api.parser.model.Words.Interpret.Builder subBuilder = tw.dictionary.api.parser.model.Words.Interpret.newBuilder();
+              tw.dictionary.api.parser.model.Words.Pronunciation.Builder subBuilder = tw.dictionary.api.parser.model.Words.Pronunciation.newBuilder();
+              if (hasPronunciation()) {
+                subBuilder.mergeFrom(getPronunciation());
+              }
               input.readMessage(subBuilder, extensionRegistry);
-              addInterprets(subBuilder.buildPartial());
+              setPronunciation(subBuilder.buildPartial());
               break;
             }
             case 26: {
-              bitField0_ |= 0x00000004;
-              pronunciation_ = input.readBytes();
-              break;
-            }
-            case 34: {
-              bitField0_ |= 0x00000008;
-              audioURL_ = input.readBytes();
+              tw.dictionary.api.parser.model.Words.Interpret.Builder subBuilder = tw.dictionary.api.parser.model.Words.Interpret.newBuilder();
+              input.readMessage(subBuilder, extensionRegistry);
+              addInterprets(subBuilder.buildPartial());
               break;
             }
           }
@@ -595,13 +544,103 @@ public final class Words {
         onChanged();
       }
       
-      // repeated .tw.dictionary.api.parser.model.Interpret interprets = 2;
+      // optional .tw.dictionary.api.parser.model.Pronunciation pronunciation = 2;
+      private tw.dictionary.api.parser.model.Words.Pronunciation pronunciation_ = tw.dictionary.api.parser.model.Words.Pronunciation.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          tw.dictionary.api.parser.model.Words.Pronunciation, tw.dictionary.api.parser.model.Words.Pronunciation.Builder, tw.dictionary.api.parser.model.Words.PronunciationOrBuilder> pronunciationBuilder_;
+      public boolean hasPronunciation() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public tw.dictionary.api.parser.model.Words.Pronunciation getPronunciation() {
+        if (pronunciationBuilder_ == null) {
+          return pronunciation_;
+        } else {
+          return pronunciationBuilder_.getMessage();
+        }
+      }
+      public Builder setPronunciation(tw.dictionary.api.parser.model.Words.Pronunciation value) {
+        if (pronunciationBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          pronunciation_ = value;
+          onChanged();
+        } else {
+          pronunciationBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder setPronunciation(
+          tw.dictionary.api.parser.model.Words.Pronunciation.Builder builderForValue) {
+        if (pronunciationBuilder_ == null) {
+          pronunciation_ = builderForValue.build();
+          onChanged();
+        } else {
+          pronunciationBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder mergePronunciation(tw.dictionary.api.parser.model.Words.Pronunciation value) {
+        if (pronunciationBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              pronunciation_ != tw.dictionary.api.parser.model.Words.Pronunciation.getDefaultInstance()) {
+            pronunciation_ =
+              tw.dictionary.api.parser.model.Words.Pronunciation.newBuilder(pronunciation_).mergeFrom(value).buildPartial();
+          } else {
+            pronunciation_ = value;
+          }
+          onChanged();
+        } else {
+          pronunciationBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder clearPronunciation() {
+        if (pronunciationBuilder_ == null) {
+          pronunciation_ = tw.dictionary.api.parser.model.Words.Pronunciation.getDefaultInstance();
+          onChanged();
+        } else {
+          pronunciationBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      public tw.dictionary.api.parser.model.Words.Pronunciation.Builder getPronunciationBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getPronunciationFieldBuilder().getBuilder();
+      }
+      public tw.dictionary.api.parser.model.Words.PronunciationOrBuilder getPronunciationOrBuilder() {
+        if (pronunciationBuilder_ != null) {
+          return pronunciationBuilder_.getMessageOrBuilder();
+        } else {
+          return pronunciation_;
+        }
+      }
+      private com.google.protobuf.SingleFieldBuilder<
+          tw.dictionary.api.parser.model.Words.Pronunciation, tw.dictionary.api.parser.model.Words.Pronunciation.Builder, tw.dictionary.api.parser.model.Words.PronunciationOrBuilder> 
+          getPronunciationFieldBuilder() {
+        if (pronunciationBuilder_ == null) {
+          pronunciationBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              tw.dictionary.api.parser.model.Words.Pronunciation, tw.dictionary.api.parser.model.Words.Pronunciation.Builder, tw.dictionary.api.parser.model.Words.PronunciationOrBuilder>(
+                  pronunciation_,
+                  getParentForChildren(),
+                  isClean());
+          pronunciation_ = null;
+        }
+        return pronunciationBuilder_;
+      }
+      
+      // repeated .tw.dictionary.api.parser.model.Interpret interprets = 3;
       private java.util.List<tw.dictionary.api.parser.model.Words.Interpret> interprets_ =
         java.util.Collections.emptyList();
       private void ensureInterpretsIsMutable() {
-        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
           interprets_ = new java.util.ArrayList<tw.dictionary.api.parser.model.Words.Interpret>(interprets_);
-          bitField0_ |= 0x00000002;
+          bitField0_ |= 0x00000004;
          }
       }
       
@@ -717,7 +756,7 @@ public final class Words {
       public Builder clearInterprets() {
         if (interpretsBuilder_ == null) {
           interprets_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
+          bitField0_ = (bitField0_ & ~0x00000004);
           onChanged();
         } else {
           interpretsBuilder_.clear();
@@ -773,7 +812,7 @@ public final class Words {
           interpretsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               tw.dictionary.api.parser.model.Words.Interpret, tw.dictionary.api.parser.model.Words.Interpret.Builder, tw.dictionary.api.parser.model.Words.InterpretOrBuilder>(
                   interprets_,
-                  ((bitField0_ & 0x00000002) == 0x00000002),
+                  ((bitField0_ & 0x00000004) == 0x00000004),
                   getParentForChildren(),
                   isClean());
           interprets_ = null;
@@ -781,10 +820,415 @@ public final class Words {
         return interpretsBuilder_;
       }
       
-      // optional string pronunciation = 3;
+      // @@protoc_insertion_point(builder_scope:tw.dictionary.api.parser.model.Word)
+    }
+    
+    static {
+      defaultInstance = new Word(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:tw.dictionary.api.parser.model.Word)
+  }
+  
+  public interface PronunciationOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // required string pronunciation = 1;
+    boolean hasPronunciation();
+    String getPronunciation();
+    
+    // optional string audioURL = 2;
+    boolean hasAudioURL();
+    String getAudioURL();
+  }
+  public static final class Pronunciation extends
+      com.google.protobuf.GeneratedMessage
+      implements PronunciationOrBuilder {
+    // Use Pronunciation.newBuilder() to construct.
+    private Pronunciation(Builder builder) {
+      super(builder);
+    }
+    private Pronunciation(boolean noInit) {}
+    
+    private static final Pronunciation defaultInstance;
+    public static Pronunciation getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public Pronunciation getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tw.dictionary.api.parser.model.Words.internal_static_tw_dictionary_api_parser_model_Pronunciation_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tw.dictionary.api.parser.model.Words.internal_static_tw_dictionary_api_parser_model_Pronunciation_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // required string pronunciation = 1;
+    public static final int PRONUNCIATION_FIELD_NUMBER = 1;
+    private java.lang.Object pronunciation_;
+    public boolean hasPronunciation() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getPronunciation() {
+      java.lang.Object ref = pronunciation_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          pronunciation_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getPronunciationBytes() {
+      java.lang.Object ref = pronunciation_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        pronunciation_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // optional string audioURL = 2;
+    public static final int AUDIOURL_FIELD_NUMBER = 2;
+    private java.lang.Object audioURL_;
+    public boolean hasAudioURL() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getAudioURL() {
+      java.lang.Object ref = audioURL_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          audioURL_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getAudioURLBytes() {
+      java.lang.Object ref = audioURL_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        audioURL_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    private void initFields() {
+      pronunciation_ = "";
+      audioURL_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      if (!hasPronunciation()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getPronunciationBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getAudioURLBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getPronunciationBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getAudioURLBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static tw.dictionary.api.parser.model.Words.Pronunciation parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static tw.dictionary.api.parser.model.Words.Pronunciation parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static tw.dictionary.api.parser.model.Words.Pronunciation parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static tw.dictionary.api.parser.model.Words.Pronunciation parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static tw.dictionary.api.parser.model.Words.Pronunciation parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static tw.dictionary.api.parser.model.Words.Pronunciation parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static tw.dictionary.api.parser.model.Words.Pronunciation parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static tw.dictionary.api.parser.model.Words.Pronunciation parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static tw.dictionary.api.parser.model.Words.Pronunciation parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static tw.dictionary.api.parser.model.Words.Pronunciation parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(tw.dictionary.api.parser.model.Words.Pronunciation prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements tw.dictionary.api.parser.model.Words.PronunciationOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tw.dictionary.api.parser.model.Words.internal_static_tw_dictionary_api_parser_model_Pronunciation_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tw.dictionary.api.parser.model.Words.internal_static_tw_dictionary_api_parser_model_Pronunciation_fieldAccessorTable;
+      }
+      
+      // Construct using tw.dictionary.api.parser.model.Words.Pronunciation.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        pronunciation_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        audioURL_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return tw.dictionary.api.parser.model.Words.Pronunciation.getDescriptor();
+      }
+      
+      public tw.dictionary.api.parser.model.Words.Pronunciation getDefaultInstanceForType() {
+        return tw.dictionary.api.parser.model.Words.Pronunciation.getDefaultInstance();
+      }
+      
+      public tw.dictionary.api.parser.model.Words.Pronunciation build() {
+        tw.dictionary.api.parser.model.Words.Pronunciation result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private tw.dictionary.api.parser.model.Words.Pronunciation buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        tw.dictionary.api.parser.model.Words.Pronunciation result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public tw.dictionary.api.parser.model.Words.Pronunciation buildPartial() {
+        tw.dictionary.api.parser.model.Words.Pronunciation result = new tw.dictionary.api.parser.model.Words.Pronunciation(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.pronunciation_ = pronunciation_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.audioURL_ = audioURL_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof tw.dictionary.api.parser.model.Words.Pronunciation) {
+          return mergeFrom((tw.dictionary.api.parser.model.Words.Pronunciation)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(tw.dictionary.api.parser.model.Words.Pronunciation other) {
+        if (other == tw.dictionary.api.parser.model.Words.Pronunciation.getDefaultInstance()) return this;
+        if (other.hasPronunciation()) {
+          setPronunciation(other.getPronunciation());
+        }
+        if (other.hasAudioURL()) {
+          setAudioURL(other.getAudioURL());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        if (!hasPronunciation()) {
+          
+          return false;
+        }
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              pronunciation_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              audioURL_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // required string pronunciation = 1;
       private java.lang.Object pronunciation_ = "";
       public boolean hasPronunciation() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+        return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       public String getPronunciation() {
         java.lang.Object ref = pronunciation_;
@@ -800,27 +1244,27 @@ public final class Words {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000001;
         pronunciation_ = value;
         onChanged();
         return this;
       }
       public Builder clearPronunciation() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000001);
         pronunciation_ = getDefaultInstance().getPronunciation();
         onChanged();
         return this;
       }
       void setPronunciation(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000001;
         pronunciation_ = value;
         onChanged();
       }
       
-      // optional string audioURL = 4;
+      // optional string audioURL = 2;
       private java.lang.Object audioURL_ = "";
       public boolean hasAudioURL() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       public String getAudioURL() {
         java.lang.Object ref = audioURL_;
@@ -836,32 +1280,32 @@ public final class Words {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000008;
+  bitField0_ |= 0x00000002;
         audioURL_ = value;
         onChanged();
         return this;
       }
       public Builder clearAudioURL() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000002);
         audioURL_ = getDefaultInstance().getAudioURL();
         onChanged();
         return this;
       }
       void setAudioURL(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000002;
         audioURL_ = value;
         onChanged();
       }
       
-      // @@protoc_insertion_point(builder_scope:tw.dictionary.api.parser.model.Word)
+      // @@protoc_insertion_point(builder_scope:tw.dictionary.api.parser.model.Pronunciation)
     }
     
     static {
-      defaultInstance = new Word(true);
+      defaultInstance = new Pronunciation(true);
       defaultInstance.initFields();
     }
     
-    // @@protoc_insertion_point(class_scope:tw.dictionary.api.parser.model.Word)
+    // @@protoc_insertion_point(class_scope:tw.dictionary.api.parser.model.Pronunciation)
   }
   
   public interface InterpretOrBuilder
@@ -2589,6 +3033,11 @@ public final class Words {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_tw_dictionary_api_parser_model_Word_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_tw_dictionary_api_parser_model_Pronunciation_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_tw_dictionary_api_parser_model_Pronunciation_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_tw_dictionary_api_parser_model_Interpret_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -2613,16 +3062,18 @@ public final class Words {
   static {
     java.lang.String[] descriptorData = {
       "\n\031main/resources/Word.proto\022\036tw.dictiona" +
-      "ry.api.parser.model\"|\n\004Word\022\014\n\004word\030\001 \002(" +
-      "\t\022=\n\ninterprets\030\002 \003(\0132).tw.dictionary.ap" +
-      "i.parser.model.Interpret\022\025\n\rpronunciatio" +
-      "n\030\003 \001(\t\022\020\n\010audioURL\030\004 \001(\t\"V\n\tInterpret\022\016" +
-      "\n\006speech\030\001 \002(\t\0229\n\010explains\030\002 \003(\0132\'.tw.di" +
-      "ctionary.api.parser.model.Explain\"U\n\007Exp" +
-      "lain\022\017\n\007content\030\001 \002(\t\0229\n\010examples\030\002 \003(\0132" +
-      "\'.tw.dictionary.api.parser.model.Example" +
-      "\"\032\n\007Example\022\017\n\007content\030\001 \002(\tB\'\n\036tw.dicti",
-      "onary.api.parser.modelB\005Words"
+      "ry.api.parser.model\"\231\001\n\004Word\022\014\n\004word\030\001 \002" +
+      "(\t\022D\n\rpronunciation\030\002 \001(\0132-.tw.dictionar" +
+      "y.api.parser.model.Pronunciation\022=\n\ninte" +
+      "rprets\030\003 \003(\0132).tw.dictionary.api.parser." +
+      "model.Interpret\"8\n\rPronunciation\022\025\n\rpron" +
+      "unciation\030\001 \002(\t\022\020\n\010audioURL\030\002 \001(\t\"V\n\tInt" +
+      "erpret\022\016\n\006speech\030\001 \002(\t\0229\n\010explains\030\002 \003(\013" +
+      "2\'.tw.dictionary.api.parser.model.Explai" +
+      "n\"U\n\007Explain\022\017\n\007content\030\001 \002(\t\0229\n\010example",
+      "s\030\002 \003(\0132\'.tw.dictionary.api.parser.model" +
+      ".Example\"\032\n\007Example\022\017\n\007content\030\001 \002(\tB\'\n\036" +
+      "tw.dictionary.api.parser.modelB\005Words"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2634,11 +3085,19 @@ public final class Words {
           internal_static_tw_dictionary_api_parser_model_Word_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_tw_dictionary_api_parser_model_Word_descriptor,
-              new java.lang.String[] { "Word", "Interprets", "Pronunciation", "AudioURL", },
+              new java.lang.String[] { "Word", "Pronunciation", "Interprets", },
               tw.dictionary.api.parser.model.Words.Word.class,
               tw.dictionary.api.parser.model.Words.Word.Builder.class);
-          internal_static_tw_dictionary_api_parser_model_Interpret_descriptor =
+          internal_static_tw_dictionary_api_parser_model_Pronunciation_descriptor =
             getDescriptor().getMessageTypes().get(1);
+          internal_static_tw_dictionary_api_parser_model_Pronunciation_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_tw_dictionary_api_parser_model_Pronunciation_descriptor,
+              new java.lang.String[] { "Pronunciation", "AudioURL", },
+              tw.dictionary.api.parser.model.Words.Pronunciation.class,
+              tw.dictionary.api.parser.model.Words.Pronunciation.Builder.class);
+          internal_static_tw_dictionary_api_parser_model_Interpret_descriptor =
+            getDescriptor().getMessageTypes().get(2);
           internal_static_tw_dictionary_api_parser_model_Interpret_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_tw_dictionary_api_parser_model_Interpret_descriptor,
@@ -2646,7 +3105,7 @@ public final class Words {
               tw.dictionary.api.parser.model.Words.Interpret.class,
               tw.dictionary.api.parser.model.Words.Interpret.Builder.class);
           internal_static_tw_dictionary_api_parser_model_Explain_descriptor =
-            getDescriptor().getMessageTypes().get(2);
+            getDescriptor().getMessageTypes().get(3);
           internal_static_tw_dictionary_api_parser_model_Explain_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_tw_dictionary_api_parser_model_Explain_descriptor,
@@ -2654,7 +3113,7 @@ public final class Words {
               tw.dictionary.api.parser.model.Words.Explain.class,
               tw.dictionary.api.parser.model.Words.Explain.Builder.class);
           internal_static_tw_dictionary_api_parser_model_Example_descriptor =
-            getDescriptor().getMessageTypes().get(3);
+            getDescriptor().getMessageTypes().get(4);
           internal_static_tw_dictionary_api_parser_model_Example_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_tw_dictionary_api_parser_model_Example_descriptor,
