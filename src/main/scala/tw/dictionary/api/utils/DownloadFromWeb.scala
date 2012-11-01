@@ -17,7 +17,7 @@ object DownloadFromWeb {
 
   val es = Executors.newFixedThreadPool(5)
   implicit val ec = ExecutionContext.fromExecutorService(es)  
-  
+  /*
   def main(args: Array[String]) {
 	  val wordStream = new BufferedReader(new FileReader(wordsListPath))
 	  val dicStream = new FileOutputStream(dictionaryPath, false)
@@ -29,7 +29,7 @@ object DownloadFromWeb {
 	  
 	  dicStream.close()
   }
-  
+  */
   def futureQueryWords(wordsList:List[String], parser:YahooParser) = Await.result(Future.traverse(wordsList)(word => Future(parser.LookUp(word))), 30 minutes)  
    def handleAllLine(reader: BufferedReader, wordsList: List[String] = List[String]()): List[String] = {
       val line = reader.readLine()

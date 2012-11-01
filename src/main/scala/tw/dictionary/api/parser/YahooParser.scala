@@ -20,11 +20,6 @@ object YahooParser {
   val ExplainElementName = "div.list ol li"
   val ExplainTitleName = "p.interpret"
   val ExampleTagName = "p.example"
-  def main(args: Array[String]) {
-    val parser = new YahooParser
-    println(parser.LookUp("Search"))
-
-  }
 }
 
 class YahooParser extends DictionaryParser{

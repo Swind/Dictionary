@@ -1,12 +1,16 @@
 import com.twitter.sbt._
  
-seq(StandardProject.newSettings: _*)
- 
+seq(PackageDist.newSettings: _*)
+
+seq(GitProject.gitSettings: _*)
+
 packageDistZipName := "DictionaryServer.zip"
  
 organization := "cc.spray"
  
 name := "DictionaryServer"
+
+mainClass in (Compile, packageBin) := Some("spray.examples.Main")
  
 version := "0.1.0-SNAPSHOT"
  
@@ -24,7 +28,10 @@ libraryDependencies ++= Seq(
    	"com.typesafe.akka" % "akka-actor" % "2.0.3",
 	"cc.spray" % "spray-server" % "1.0-M2",
 	"cc.spray" % "spray-can" % "1.0-M2",
-   	"junit" % "junit" % "4.10"
+   	"junit" % "junit" % "4.10",
+   	"com.typesafe.akka" % "akka-slf4j" % "2.0.3",
+   	"org.slf4j" % "slf4j-api" % "1.6.6",
+   	"ch.qos.logback" % "logback-classic" % "1.0.7"
 )
 
 //sbteclipse setting

@@ -7,6 +7,7 @@ import tw.dictionary.api.parser.model.Words.Word
 import java.io.InputStream
 
 object ReadFormDic {
+  /*
   def main(args: Array[String]) {
 
     val tmpPath = "./data/Yahoo.dic"
@@ -30,7 +31,7 @@ object ReadFormDic {
 
     readStream.close()
   }
-
+*/
   def readFromStream[T](stream: InputStream)(handler: (Word) => T):Unit = {
     val word = Words.Word.parseDelimitedFrom(stream)
     if (word != null) {

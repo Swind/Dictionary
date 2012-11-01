@@ -19,6 +19,7 @@ object CSVPretreatmenter {
     handleAllLine(reader, writer, handler)
   }
 
+  /*
   def main(args: Array[String]) {
     handleLines("./data/GEPTmediumhigh.csv", "./data/GEPTmediumhigh.txt") {
       line =>
@@ -29,4 +30,5 @@ object CSVPretreatmenter {
         }
     }
   }
+  */
 }
