@@ -1,4 +1,4 @@
-package spray.examples
+package tw.dictionary.api.server
 
 import java.security.KeyStore
 import java.security.SecureRandom

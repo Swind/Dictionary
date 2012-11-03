@@ -31,7 +31,6 @@ class YahooParser extends DictionaryParser{
     try
     {
     	val doc = Jsoup.connect(DictionaryURL + word).get
-    	println(doc.toString)
     	Word(word, parsePronunciation(doc), parseInterpret(doc))
     }
     catch

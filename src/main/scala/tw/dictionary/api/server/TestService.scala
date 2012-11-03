@@ -1,4 +1,4 @@
-package spray.examples
+package tw.dictionary.api.server
 
 import cc.spray.can.model._
 import cc.spray.can.server.HttpServer
@@ -7,9 +7,14 @@ import cc.spray.io.ConnectionClosedReason
 import akka.util.duration._
 import akka.actor._
 import akka.pattern.ask
-
+import tw.dictionary.api.parser.model.Words.Word
+import common._
+import tw.dictionary.api._
+import tw.dictionary.api.parser.YahooParser
 class TestService extends Actor with ActorLogging {
   import HttpMethods._
+
+  val yahooParser = new YahooParser
 
   protected def receive = {
 
@@ -19,20 +24,17 @@ class TestService extends Actor with ActorLogging {
     case HttpRequest(GET, "/ping", _, _, _) =>
       sender ! response("PONG!")
 
-    case HttpRequest(GET, "/stream", _, _, _) =>
-      val peer = sender // since the Props creator is executed asyncly we need to save the sender ref
-      context.actorOf(Props(new Streamer(peer, 100)))
-
     case HttpRequest(GET, "/stats", _, _, _) =>
       val client = sender
       context.actorFor("../http-server").ask(HttpServer.GetStats)(1.second).onSuccess {
         case x: HttpServer.Stats => client ! statsPresentation(x)
       }
 
-    case HttpRequest(GET, "/crash", _, _, _) =>
-      sender ! response("About to throw an exception in the request handling actor, " +
-        "which will trigger an actor restart as defined by the default supervisor strategy")
-      throw new RuntimeException("BOOM!")
+    /**
+      *
+      *  Crash and timeout
+      *
+      */
 
     case HttpRequest(GET, "/timeout", _, _, _) =>
       log.info("Dropping request, triggering a timeout")
@@ -44,6 +46,28 @@ class TestService extends Actor with ActorLogging {
       sender ! response("Shutting down in 1 second ...")
       context.system.scheduler.scheduleOnce(1.second, new Runnable { def run() { context.system.shutdown() } })
 
+    /**
+      *
+      * Service
+      *
+      *      case class HttpRequest(
+      *                  method: HttpMethod = HttpMethods.GET,
+      *                  uri: String = "/",
+      *                  headers: List[HttpHeader] = Nil,
+      *                  content: Option[HttpContent] = None,
+      *                  protocol: HttpProtocol = `HTTP/1.1`)
+      */
+
+    case HttpRequest(GET, uri, _, _, _) if uri.startsWith("/search") => {
+    	val word = uri.split("/").last
+    	sender ! ProtobufResponse(yahooParser.LookUp(word), 200)
+    }
+
+    /**
+      *
+      * 	Error Handling
+      *
+      */
     case _: HttpRequest => sender ! response("Unknown resource!", 404)
 
     case HttpServer.RequestTimeout(HttpRequest(_, "/timeout/timeout", _, _, _)) =>
@@ -58,13 +82,23 @@ class TestService extends Actor with ActorLogging {
       context.children.foreach(_ ! CancelStream(sender, x.reason))
   }
 
-  ////////////// helpers //////////////
+  ////////////// Header and Response //////////////
 
+  //Text Response
   val defaultHeaders = List(HttpHeader("Content-Type", "text/plain"))
 
   def response(msg: String, status: Int = 200) =
     HttpResponse(status, defaultHeaders, msg.getBytes("ISO-8859-1"))
 
+  //Google protocol buffer Response
+  val protobufHeaders = List(HttpHeader("Content-Type", "application/x-protobuf"))
+
+  def ProtobufResponse(word: Word, status: Int = 200) = HttpResponse(
+    headers = defaultHeaders,
+    body = word.toByteArray,
+    status = status)
+
+  //Index Response
   lazy val index = HttpResponse(
     headers = List(HttpHeader("Content-Type", "text/html")),
     body =
@@ -74,7 +108,7 @@ class TestService extends Actor with ActorLogging {
           <p>Defined resources:</p>
           <ul>
             <li><a href="/ping">/ping</a></li>
-            <li><a href="/stream">/stream</a></li>
+            <li><a href="/search">/search</a></li>
             <li><a href="/stats">/stats</a></li>
             <li><a href="/crash">/crash</a></li>
             <li><a href="/timeout">/timeout</a></li>
@@ -82,9 +116,9 @@ class TestService extends Actor with ActorLogging {
             <li><a href="/stop">/stop</a></li>
           </ul>
         </body>
-      </html>.toString.getBytes("ISO-8859-1")
-  )
+      </html>.toString.getBytes("ISO-8859-1"))
 
+  //Stats Response
   def statsPresentation(s: HttpServer.Stats) = HttpResponse(
     headers = List(HttpHeader("Content-Type", "text/html")),
     body =
@@ -92,43 +126,18 @@ class TestService extends Actor with ActorLogging {
         <body>
           <h1>HttpServer Stats</h1>
           <table>
-            <tr><td>uptime:</td><td>{s.uptime.printHMS}</td></tr>
-            <tr><td>totalRequests:</td><td>{s.totalRequests}</td></tr>
-            <tr><td>openRequests:</td><td>{s.openRequests}</td></tr>
-            <tr><td>maxOpenRequests:</td><td>{s.maxOpenRequests}</td></tr>
-            <tr><td>totalConnections:</td><td>{s.totalConnections}</td></tr>
-            <tr><td>openConnections:</td><td>{s.openConnections}</td></tr>
-            <tr><td>maxOpenConnections:</td><td>{s.maxOpenConnections}</td></tr>
-            <tr><td>requestTimeouts:</td><td>{s.requestTimeouts}</td></tr>
-            <tr><td>idleTimeouts:</td><td>{s.idleTimeouts}</td></tr>
+            <tr><td>uptime:</td><td>{ s.uptime.printHMS }</td></tr>
+            <tr><td>totalRequests:</td><td>{ s.totalRequests }</td></tr>
+            <tr><td>openRequests:</td><td>{ s.openRequests }</td></tr>
+            <tr><td>maxOpenRequests:</td><td>{ s.maxOpenRequests }</td></tr>
+            <tr><td>totalConnections:</td><td>{ s.totalConnections }</td></tr>
+            <tr><td>openConnections:</td><td>{ s.openConnections }</td></tr>
+            <tr><td>maxOpenConnections:</td><td>{ s.maxOpenConnections }</td></tr>
+            <tr><td>requestTimeouts:</td><td>{ s.requestTimeouts }</td></tr>
+            <tr><td>idleTimeouts:</td><td>{ s.idleTimeouts }</td></tr>
           </table>
         </body>
-      </html>.toString.getBytes("ISO-8859-1")
-  )
+      </html>.toString.getBytes("ISO-8859-1"))
 
   case class CancelStream(peer: ActorRef, reason: ConnectionClosedReason)
-
-  class Streamer(peer: ActorRef, var count: Int) extends Actor with ActorLogging {
-    log.debug("Starting streaming response ...")
-    peer ! ChunkedResponseStart(HttpResponse(headers = defaultHeaders).withBody(" " * 2048))
-    val chunkGenerator = context.system.scheduler.schedule(100.millis, 100.millis, self, 'Tick)
-
-    protected def receive = {
-      case 'Tick if count > 0 =>
-        log.info("Sending response chunk ...")
-        peer ! MessageChunk(DateTime.now.toIsoDateTimeString + ", ")
-        count -= 1
-      case 'Tick =>
-        log.info("Finalizing response stream ...")
-        chunkGenerator.cancel()
-        peer ! MessageChunk("\nStopped...")
-        peer ! ChunkedMessageEnd()
-        context.stop(self)
-      case CancelStream(ref, reason) => if (ref == peer) {
-        log.info("Canceling response stream due to {} ...", reason)
-        chunkGenerator.cancel()
-        context.stop(self)
-      }
-    }
-  }
 }
