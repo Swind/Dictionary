@@ -10,7 +10,7 @@ organization := "cc.spray"
  
 name := "DictionaryServer"
 
-mainClass in (Compile, packageBin) := Some("spray.examples.Main")
+mainClass in (Compile, packageBin) := Some("tw.dictionary.api.server.Main")
  
 version := "0.1.0-SNAPSHOT"
  
