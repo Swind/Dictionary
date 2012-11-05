@@ -21,10 +21,11 @@ object YahooParser {
   val ExplainElementName = "div.list ol li"
   val ExplainTitleName = "p.interpret"
   val ExampleTagName = "p.example"
-
+  val httpRegex = """(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?""".r
+    
   def main(args: Array[String]) {
     val parser = new YahooParser
-    parser.LookUp("search")
+    println(parser.LookUp("search"))
   }
 }
 
@@ -32,78 +33,81 @@ class YahooParser extends DictionaryParser {
   import tw.dictionary.api.parser.YahooParser._
   import tw.dictionary.api.parser.model.GoogleProtoBufFactory._
 
+  val wordParser =
+    word(
+      pronunciation
+      (
+        pronunciationText,
+        audioText
+      ),
+      interprets
+      (
+        speechText,
+        explains
+        (
+          explainText,
+          examples
+        )
+      )
+    )_
+
   def LookUp(searchWord: String) = {
     try {
+      
       val doc = Jsoup.connect(DictionaryURL + searchWord).get
-
-      val wordParser = word(
-        searchWord,
-
-        pronunciation(
-	          pronunciationText,
-	          audioText
-	    ),
-
-        interprets(
-	          speechText,
-	          explains(
-		            explainText,
-		            examples
-		      )
-		)
-      )_
-
-      wordParser(doc)
+      Some(wordParser(searchWord, doc))
+      
     } catch {
-      case _ => emptyWord(searchWord)
+      case _ => None
     }
   }
 
-  /*
-   * Word{
-   * 	text,
-   * 	pronunciation{
-   * 		text,
-   * 		audio
-   * 	},
-   * 	interpret[]{
-   * 		speech,
-   * 		explain[]{
-   * 			text,
-   * 			example[]{
-   * 				text
-   * 			}
-   * 		}
-   * 	}
-   * }
-   */
-
-  def word(text: String, pronunciationF: Document => Words.Pronunciation, interpretF: Document => List[Words.Interpret])(doc: Document) =
+  def word(pronunciationF: Document => Words.Pronunciation, interpretF: Document => List[Words.Interpret])(text: String, doc: Document) =
     Word(text, pronunciationF(doc), interpretF(doc))
 
+  /**
+   * Pronunciation
+   */
   def pronunciation(pronunciationTextF: (Document) => String, audioF: (Document) => String)(doc: Document) = Pronunciation(pronunciationTextF(doc), audioF(doc))
-  //pronunciation
+  //pronunciation text
   def pronunciationText(doc: Document) = doc.select(PronunciationName).first.text
   //audio URL
-  def audioText(doc: Document) = doc.select(AudioName).first.toString
+  def audioText(doc: Document) = 
+  {
+	httpRegex.findFirstIn(doc.select("body > script").get(1).toString) match
+	{
+	  case Some(audioURL) => audioURL
+	  case None => ""
+	}
+  }
 
-  //interprets
+  /**
+   * interprets
+   */
   def interprets(speechF: (Element) => String, explainF: (Element) => List[Words.Explain])(doc: Document) = SelectAndMapToList(doc, InterpretElementTag) {
     elem => Interpret(speechF(elem), explainF(elem))
   }
   def speechText(interpretElement: Element) = interpretElement.select(SpeechTagName).first.text
 
-  //Explain
+  /**
+   * Explain
+   */
   def explainText(element: Element) = getFirstMatchText(element, ExplainTitleName)
   def explains(explainTextF: (Element) => String, exampleF: (Element) => List[Words.Example])(element: Element) = SelectAndMapToList(element, ExplainElementName) {
     elem => Explain(explainTextF(elem), exampleF(elem))
   }
 
+  /**
+   * Example
+   */
   def examples(element: Element) = SelectAndMapToList(element, ExampleTagName) {
     elem => Example(elem.text)
   }
 
-  def SelectAndMapToList[T](elem: Element, selectName: String)(mapAction: (Element) => T): List[T] = elem.select(selectName).map(mapAction).toList
-  def getFirstMatchText(element: Element, pattern: String) = element.select(pattern).first.text
+  /**
+   * Utils
+   */
+  private def SelectAndMapToList[T](elem: Element, selectName: String)(mapAction: (Element) => T): List[T] = elem.select(selectName).map(mapAction).toList
+  private def getFirstMatchText(element: Element, pattern: String) = element.select(pattern).first.text
 
 }

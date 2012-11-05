@@ -60,7 +60,7 @@ class TestService extends Actor with ActorLogging {
 
     case HttpRequest(GET, uri, _, _, _) if uri.startsWith("/search") => {
     	val word = uri.split("/").last
-    	sender ! ProtobufResponse(yahooParser.LookUp(word), 200)
+    	sender ! ProtobufResponse(yahooParser.LookUp(word).get, 200)
     }
 
     /**
