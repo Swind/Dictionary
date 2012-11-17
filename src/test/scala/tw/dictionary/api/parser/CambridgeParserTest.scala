@@ -34,6 +34,9 @@ class CambridgeParserTest extends FunSuite with ShouldMatchers{
     
     //example
     parser exampleText defBlock should be("a spelling test") 
+    
+    //resultList
+    parser.resultList(doc).size should be(6)
   }
   
   
